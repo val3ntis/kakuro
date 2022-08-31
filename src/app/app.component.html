@@ -1,0 +1,45 @@
+
+<div class="flex flex-col justify-center items-center h-full
+  {{activeTheme.bg}}">
+  <div
+    class="flex flex-col items-center justify-center">
+    <h1 class="my-6 {{activeTheme.title}} text-center font-bold text-4xl
+      h-full">
+      KAKURO 5x5
+    </h1>
+  </div>
+
+  <div class="w-full flex mb-8 justify-center items-center">
+    <button
+      (click)="chooseTheme(0)"
+      class="px-10 py-2 text-2xl rounded-lg {{activeTheme.btn_bg}} text-white
+      border-2 mr-10">pink</button>
+    <button
+      (click)="chooseTheme(1)"
+      class="px-10 py-2 text-2xl rounded-lg {{activeTheme.btn_bg}} text-white
+      border-2">purple</button>
+  </div>
+
+  <div class="flex justify-center items-center mb-20 {{activeTheme.table_bg}}
+    rounded overflow-hidden">
+    <div class="grid grid-rows-10 space-y-1 overflow-hidden border border-4
+      {{activeTheme.table_border}}">
+      <div *ngFor="let row of board; let i= index" class="flex flex-row
+        space-x-1">
+        <div *ngFor="let element of row; let j=index"
+          class="{{activeTheme.field_bg}} w-8 h-8 sm:w-20 sm:h-20 border
+          overflow-hidden text-black flex justify-center items-center rounded">
+          <input
+           type="number"
+            min="1"
+            max="9"
+            id={{i}}{{j}} 
+            [value]="board[i][j]"
+            (ngModelChange)="dataChanged($event, i,j)"
+            class="w-full h-full text-center flex justify-center items-center
+            text-3xl sm:text-5xl {{activeTheme.text}} pb-2.5">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
