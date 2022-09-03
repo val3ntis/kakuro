@@ -8,11 +8,13 @@
     </h1>
   </div>
 
+  <!--  DUGMAD ZA TEME-->
+
   <div class="w-full flex mb-8 justify-center items-center">
     <button
       (click)="chooseTheme(0)"
-      class="px-10 py-2 text-2xl rounded-lg {{activeTheme.btn_bg}} text-white
-      border-2 mr-10">pink
+      class="px-10 py-2 text-2xl rounded-lg {{activeTheme.btn_bg}} text-white border-2 mr-10">
+      pink
     </button>
     <button
       (click)="chooseTheme(1)"
@@ -21,8 +23,11 @@
     </button>
   </div>
 
+
+  <!--  TABELA-->
+
   <div class="flex justify-center items-center mb-20 {{activeTheme.table_bg}}
-    rounded overflow-hidden">
+    rounded">
     <div class="grid grid-rows-10 space-y-1 overflow-hidden border border-4
       {{activeTheme.table_border}}">
       <div *ngFor="let row of board; let i= index" class="flex flex-row
@@ -31,20 +36,20 @@
              class="{{activeTheme.field_bg}} w-8 h-8 sm:w-20 sm:h-20
           overflow-hidden text-black flex justify-center items-center rounded">
           <input
-            *ngIf="element.value === 0"
+            *ngIf="element.value !== -1 && !element.hasValue"
             type="number"
             min="1"
             max="9"
             id={{i}}{{j}}
-            [value]=""
+            [(ngModel)]="element.value"
             (ngModelChange)="dataChanged($event, i,j)"
             class="w-full h-full text-center flex justify-center items-center
             text-3xl sm:text-5xl {{activeTheme.text}} pb-2.5">
           <div *ngIf="element.value === -1" class="w-full h-full flex justify-center items-center {{activeTheme.board_01}}"></div>
-          <div *ngIf="element.value !== -1 && element.value !== 0"
+          <div *ngIf="element.value !== -1 && element.hasValue"
                class="w-full h-full flex justify-center items-center {{activeTheme.board_02}} text-white relative overflow-hidden">
-           <div class="w-28 h-0.5 absolute top-10 rotate-45 {{activeTheme.line}}"></div>
-           <div *ngIf="element.up" class="absolute top-3 right-3 font-bold {{activeTheme.numbers}}">{{ element.value }}</div>
+            <div class="w-28 h-0.5 absolute top-10 rotate-45 {{activeTheme.line}}"></div>
+            <div *ngIf="element.up" class="absolute top-3 right-3 font-bold {{activeTheme.numbers}}">{{ element.value }}</div>
             <div *ngIf="!element.up" class="absolute bottom-2 left-4 font-bold {{activeTheme.numbers}}">{{ element.value }}</div>
           </div>
         </div>
@@ -52,8 +57,31 @@
     </div>
   </div>
 
-  <div class="flex justify-center items-center">
-    <button (click)="newGame()" class="bg-white text-black rounded-md font-bold hover:bg-gray-300 px-10 py-4">New Game</button>
+  <!--  TIMER-->
+
+  <div class="px-6 border-[3px] border-white text-xl font-bold rounded-xl text-center text-white py-1">
+    00 : 0{{minutesLeft | number : '1.0-0'  }} : {{ timeLeft % 60 | number : '1.0-2' }}
   </div>
+
+  <!--  DUGME ZA NOVU IGRU-->
+
+  <div class="w-full my-2 flex justify-center items-center">
+    <button (click)="initNewGame()"
+            class="bg-white text-black rounded-md font-bold hover:bg-gray-300 px-6 py-2">
+      New Game
+    </button>
+  </div>
+
+
+  <!--  POPUP ZA NOVU IGRU-->
+
+  <div *ngIf="semaphores.displayNewGamePopUp" class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+    <div class="p-20 flex flex-col justify-center items-start bg-purple-500 border-2 rounded-md space-y-4 z-10 text-black font-bold">
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(10)">10 minutes</button>
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(5)">5 minutes</button>
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(3)">3 minutes</button>
+    </div>
+  </div>
+
 
 </div>

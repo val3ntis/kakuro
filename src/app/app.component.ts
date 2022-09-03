@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Pipe, PipeTransform, OnInit } from '@angular/core';
 import { states } from './Helpers';
 import { BoardItem } from './classes/BoardItem';
 
@@ -9,7 +9,7 @@ import { BoardItem } from './classes/BoardItem';
 })
 export class AppComponent implements OnInit {
 
-  board: BoardItem[][] = [
+  board: any = [
     [{}, {}, {}, {}, {}],
     [{}, {}, {}, {}, {}],
     [{}, {}, {}, {}, {}],
@@ -18,6 +18,16 @@ export class AppComponent implements OnInit {
   ];
 
   activeTheme: any = {};
+  semaphores: any = {
+    won: false,
+    lost: false,
+    displayNewGamePopUp: false
+  };
+
+  timeLeft: number = 0;
+  minutesLeft: number = 0;
+  interval: any;
+  dimension: number = 5;
 
 
   themes: any = [
@@ -50,17 +60,39 @@ export class AppComponent implements OnInit {
     }
   ];
 
+  startTimer(minutes?: number): void {
+    this.interval = setInterval(() => {
+      if (this.timeLeft === 0) {
+        this.semaphores.lost = true;
+        this.stopTimer();
+      }
+      if (this.timeLeft > 0) {
+        this.minutesLeft = Math.trunc(this.timeLeft / 60);
+        this.timeLeft--;
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.interval);
+  }
+
+
   chooseTheme(i: number): void {
     this.activeTheme = this.themes[i];
   }
 
   ngOnInit(): void {
     this.activeTheme = this.themes[0];
-    this.newGame();
+    this.chooseTime(5);
   }
 
   dataChanged(newObj: any, i: number, j: number): void {
     this.board[i][j].value = newObj;
+      if (this.checkWinner()) {
+      window.alert('won');
+      this.stopTimer();
+    }
   }
 
   findBoardItem(arr: BoardItem [], i: number, j: number): BoardItem | undefined {
@@ -75,10 +107,16 @@ export class AppComponent implements OnInit {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  newGame(): void {
+  initNewGame(): void {
+    this.stopTimer();
+    this.semaphores.displayNewGamePopUp = true;
+  }
+
+  newGame(minutes?: number): void {
+
     const niz = states[this.getRandomArbitrary(0, states.length - 1)];
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 5; j++) {
+    for (let i = 0; i < this.dimension; i++) {
+      for (let j = 0; j < this.dimension; j++) {
         const boardItem = this.findBoardItem(niz, i, j);
         if (boardItem !== undefined) {
           this.board[i][j] = boardItem;
@@ -93,6 +131,60 @@ export class AppComponent implements OnInit {
         }
       }
     }
+    this.startTimer(minutes);
   }
 
+  chooseTime(minutes: number): void {
+    this.timeLeft = minutes * 60 - 1;
+    this.minutesLeft = Math.trunc(this.timeLeft / 60);
+    this.newGame(minutes);
+    this.semaphores.displayNewGamePopUp = false;
+  }
+
+  checkWinner(): boolean {
+    for (let i = 0; i < this.dimension; i++) {
+      for (let j = 0; j < this.dimension; j++) {
+        if (this.board[i][j].hasValue && this.board[i][j].up) {
+          if (!this.checkRow(i, j)) {
+            return false;
+          }
+        } else if (this.board[i][j].hasValue && !this.board[i][j].up) {
+          if (!this.checkColumn(i, j)) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  checkColumn(i: number, j: number): boolean {
+    let totalSumInCol = 0;
+    let row = i + 1;
+    while (row < this.dimension && !this.board[row][j].hasValue && this.board[row][j].value !== -1) {
+      totalSumInCol = totalSumInCol + +this.board[row][j].value;
+      row++;
+    }
+    return totalSumInCol === this.board[i][j].value;
+  }
+
+  checkRow(i: number, j: number): boolean {
+    let totalSumInRow = 0;
+    let col = j + 1;
+    while (col < this.dimension && !this.board[i][col].hasValue && this.board[i][col].value !== -1) {
+      totalSumInRow = totalSumInRow + +this.board[i][col].value;
+      col++;
+    }
+    return totalSumInRow === this.board[i][j].value;
+  }
+
+
+}
+
+
+@Pipe({name: 'DecimalPipe'})
+export class NumNotRoundPipe implements PipeTransform {
+  transform(value: number): number {
+    return Math.floor(value * 100) / 100;
+  }
 }

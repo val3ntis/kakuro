@@ -111,7 +111,7 @@ export const niz2 = [
   new BoardItem({
     row: 0,
     col: 1,
-    value: 2,
+    value: 23,
     up: false,
     hasValue: true
   }),
@@ -217,7 +217,7 @@ export const niz3 = [
   new BoardItem({
     row: 0,
     col: 1,
-    value: 3,
+    value: 23,
     up: false,
     hasValue: true
   }),
@@ -323,7 +323,7 @@ export const niz4 = [
   new BoardItem({
     row: 0,
     col: 1,
-    value: 4,
+    value: 23,
     up: false,
     hasValue: true
   }),
@@ -429,7 +429,7 @@ export const niz5 = [
   new BoardItem({
     row: 0,
     col: 1,
-    value: 5,
+    value: 23,
     up: false,
     hasValue: true
   }),
