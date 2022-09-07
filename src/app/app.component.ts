@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { niz3x3, niz4x4, states } from './Helpers';
+import { niz3x3, niz4x4, niz5x5 } from './Helpers';
 import { themes } from './themes';
 import { BoardItem } from './classes/BoardItem';
 
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   semaphores: any = {
     won: false,
     lost: false,
-    displayNewGamePopUp: false,
+    displayTimeSelector: false,
     displayLevelSelector: true
   };
 
@@ -26,11 +26,14 @@ export class AppComponent implements OnInit {
   dimension: number = 5;
 
 
-  startTimer(minutes?: number): void {
+  startTimer(): void {
     this.interval = setInterval(() => {
       if (this.timeLeft === 0) {
         this.semaphores.lost = true;
-        window.alert('You lost');
+        setTimeout(() => {
+          this.semaphores.lost = false;
+          this.semaphores.displayLevelSelector = true;
+        }, 3000)
         this.stopTimer();
       }
       if (this.timeLeft > 0) {
@@ -47,7 +50,7 @@ export class AppComponent implements OnInit {
   chooseDimension(dimension: number): void {
     this.dimension = dimension;
     this.semaphores.displayLevelSelector = false;
-    this.semaphores.displayNewGamePopUp = true;
+    this.semaphores.displayTimeSelector = true;
   }
 
 
@@ -63,9 +66,12 @@ export class AppComponent implements OnInit {
     this.board[i][j].value = newObj;
     if (this.checkWinner()) {
       setTimeout(() => {
-        window.alert('won');
         this.semaphores.won = true;
-      }, 750);
+        setTimeout(() => {
+          this.semaphores.won = false;
+          this.semaphores.displayLevelSelector = true;
+        }, 3000)
+      }, 250);
       this.stopTimer();
     }
   }
@@ -87,7 +93,7 @@ export class AppComponent implements OnInit {
     this.semaphores.displayLevelSelector = true;
   }
 
-  newGame(minutes?: number): void {
+  newGame(): void {
 
     let niz: any = [];
 
@@ -99,11 +105,11 @@ export class AppComponent implements OnInit {
         [{}, {}, {}, {}, {}],
         [{}, {}, {}, {}, {}]
       ];
-      niz = states[this.getRandomArbitrary(0, states.length - 1)];
+      niz = niz5x5[this.getRandomArbitrary(0, niz5x5.length)];
     }
 
     if (this.dimension === 3) {
-      niz = niz3x3[this.getRandomArbitrary(0, niz3x3.length - 1)];
+      niz = niz3x3[this.getRandomArbitrary(0, niz3x3.length)];
       this.board = [
         [{}, {}, {}],
         [{}, {}, {}],
@@ -117,8 +123,9 @@ export class AppComponent implements OnInit {
         [{}, {}, {}, {}],
         [{}, {}, {}, {}]
       ];
-      niz = niz4x4[this.getRandomArbitrary(0, niz4x4.length - 1)];
+      niz = niz4x4[this.getRandomArbitrary(0, niz4x4.length)];
     }
+
 
     for (let i = 0; i < this.dimension; i++) {
       for (let j = 0; j < this.dimension; j++) {
@@ -136,14 +143,14 @@ export class AppComponent implements OnInit {
         }
       }
     }
-    this.startTimer(minutes);
+    this.startTimer();
   }
 
   chooseTime(minutes: number): void {
     this.timeLeft = minutes * 60 - 1;
     this.minutesLeft = Math.trunc(this.timeLeft / 60);
-    this.newGame(minutes);
-    this.semaphores.displayNewGamePopUp = false;
+    this.newGame();
+    this.semaphores.displayTimeSelector = false;
   }
 
   checkWinner(): boolean {

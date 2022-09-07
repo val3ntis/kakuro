@@ -9,21 +9,24 @@
   <!--  POP UP ZA IZBOR DIMENZIJA-->
 
   <div *ngIf="semaphores.displayLevelSelector"
-       class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-    <div class="w-2/4 bg-purple-500 flex flex-col items-center space-y-3 justify-start py-10 rounded-md relative z-10 flex flex-col border-2 border-white">
+       class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-20">
+    <div class="p-10 bg-red-900 flex flex-col items-center space-y-3 justify-start py-10 rounded-2xl relative z-10 flex flex-col border-2 border-white">
 
       <h1 class="text-white font-bold text-3xl">KAKURO</h1>
-      <h2 class="text-white font-bold text-3xl">Izaberite dimenzije</h2>
+      <h2 class="text-white font-bold text-3xl">Choose dimension</h2>
 
       <div class="flex flex-col justify-center items-center space-y-5">
 
-        <button (click)="chooseDimension(3)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+        <button (click)="chooseDimension(3)"
+                class="px-6 py-2 w-32 rounded-md border border-white bg-red-400 font-bold text-white hover:bg-red-300">
           3x3
         </button>
-        <button (click)="chooseDimension(4)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+        <button (click)="chooseDimension(4)"
+                class="px-6 py-2 w-32 rounded-md border border-white bg-red-400 font-bold text-white hover:bg-red-300">
           4x4
         </button>
-        <button (click)="chooseDimension(5)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+        <button (click)="chooseDimension(5)"
+                class="px-6 py-2 w-32 rounded-md border border-white bg-red-400 font-bold text-white hover:bg-red-300">
           5x5
         </button>
       </div>
@@ -33,7 +36,8 @@
 
   <!--  DUGMAD ZA TEME-->
 
-  <div class="w-full flex mb-8 justify-center items-center">
+  <div *ngIf="!semaphores.displayLevelSelector && !semaphores.displayTimeSelector"
+       class="w-full flex mb-8 justify-center items-center">
     <button
       (click)="chooseTheme(0)"
       class="px-10 py-2 text-2xl rounded-lg {{activeTheme.btn_bg}} text-white border-2 mr-10">
@@ -49,7 +53,7 @@
 
   <!--  TABELA-->
 
-  <div *ngIf="!semaphores.displayLevelSelector && !this.semaphores.displayNewGamePopUp" class="flex justify-center items-center mb-20 {{activeTheme.table_bg}} rounded">
+  <div *ngIf="!semaphores.displayLevelSelector && !semaphores.displayTimeSelector" class="flex justify-center items-center mb-20 {{activeTheme.table_bg}} rounded">
     <div class="grid grid-rows-10 space-y-1 overflow-hidden border border-4
       {{activeTheme.table_border}}">
       <div *ngFor="let row of board; let i= index" class="flex flex-row
@@ -87,7 +91,8 @@
 
   <!--  DUGME ZA NOVU IGRU-->
 
-  <div class="w-full my-2 flex justify-center items-center">
+  <div *ngIf="!semaphores.displayLevelSelector && !semaphores.displayTimeSelector"
+       class="w-full my-2 flex justify-center items-center">
     <button (click)="initNewGame()"
             class="bg-white text-black rounded-md font-bold hover:bg-gray-300 px-6 py-2">
       New Game
@@ -95,26 +100,34 @@
   </div>
 
 
-  <!--  POPUP ZA NOVU IGRU-->
+  <!--  POPUP ZA IZBOR VREMENA-->
 
-  <div *ngIf="semaphores.displayNewGamePopUp" class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-    <div class="p-20 flex flex-col justify-center items-center bg-purple-500 border-2 rounded-md space-y-4 z-10 text-black font-bold">
+  <div *ngIf="semaphores.displayTimeSelector" class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-20">
+    <div class="p-10 flex flex-col justify-center items-center bg-red-900 border-2 rounded-xl space-y-4 z-10 text-white font-bold">
 
-      <h2 class="text-white font-bold text-3xl">Izaberite vrijeme</h2>
+      <h2 class="text-white font-bold text-3xl">Choose time</h2>
 
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+      <button class="px-6 py-2 rounded-md border border-white bg-red-400 hover:bg-red-300"
               (click)="chooseTime(10)">
-        10 minuta
+        10 minutes
       </button>
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+      <button class="px-6 py-2 rounded-md border border-white bg-red-400 hover:bg-red-300"
               (click)="chooseTime(5)">
-        5 minuta
+        5 minutes
       </button>
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+      <button class="px-6 py-2 rounded-md border border-white bg-red-400 hover:bg-red-300"
               (click)="chooseTime(3)">
-        3 minuta
+        3 minutes
       </button>
     </div>
+  </div>
+
+  <div *ngIf="semaphores.won" class="fixed inset-0 w-full h-full flex justify-center items-center">
+    <div class="font-bold text-green-600" style="font-size: 120px;">YOU WON</div>
+  </div>
+
+  <div *ngIf="semaphores.lost" class="fixed inset-0 w-full h-full flex justify-center items-center">
+    <div class="font-bold text-red-600 bg-white rounded-xl px-5" style="font-size: 100px;">YOU RAN OUT OF TIME</div>
   </div>
 
 
