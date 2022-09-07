@@ -2,12 +2,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent, NumNotRoundPipe } from './app.component';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NumNotRoundPipe
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -17,4 +16,5 @@ import { AppComponent, NumNotRoundPipe } from './app.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

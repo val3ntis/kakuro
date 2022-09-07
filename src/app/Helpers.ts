@@ -1,5 +1,7 @@
 import { BoardItem } from './classes/BoardItem';
 
+// Stanja za 5x5
+
 export const niz = [
 
   new BoardItem({
@@ -532,3 +534,88 @@ export const niz5 = [
 ];
 
 export const states = [niz, niz2, niz3, niz4, niz5];
+
+// Stanja za 3x3
+
+export const niz3x31 = [
+  new BoardItem({
+    row: 0,
+    col: 0,
+    value: -1,
+    up: false,
+    hasValue: false
+  }),
+  new BoardItem({
+    row: 0,
+    col: 1,
+    value: 15,
+    up: false,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 0,
+    col: 2,
+    value: 9,
+    up: false,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 1,
+    col: 0,
+    value: 17,
+    up: true,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 2,
+    col: 0,
+    value: 7,
+    up: true,
+    hasValue: true
+  })
+];
+
+export const niz3x3 = [niz3x31];
+
+// Stanja za 4 x 4
+
+
+export const niz4x41 = [
+  new BoardItem({
+    row: 0,
+    col: 0,
+    value: -1,
+    up: false,
+    hasValue: false
+  }),
+  new BoardItem({
+    row: 0,
+    col: 1,
+    value: 15,
+    up: false,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 0,
+    col: 2,
+    value: 9,
+    up: false,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 1,
+    col: 0,
+    value: 17,
+    up: true,
+    hasValue: true
+  }),
+  new BoardItem({
+    row: 2,
+    col: 0,
+    value: 7,
+    up: true,
+    hasValue: true
+  })
+];
+
+export const niz4x4 = [niz3x31];

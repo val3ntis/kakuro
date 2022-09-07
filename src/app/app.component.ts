@@ -1,5 +1,6 @@
-import { Component, Pipe, PipeTransform, OnInit } from '@angular/core';
-import { states } from './Helpers';
+import { Component, OnInit } from '@angular/core';
+import { niz3x3, niz4x4, states } from './Helpers';
+import { themes } from './themes';
 import { BoardItem } from './classes/BoardItem';
 
 @Component({
@@ -9,19 +10,14 @@ import { BoardItem } from './classes/BoardItem';
 })
 export class AppComponent implements OnInit {
 
-  board: any = [
-    [{}, {}, {}, {}, {}],
-    [{}, {}, {}, {}, {}],
-    [{}, {}, {}, {}, {}],
-    [{}, {}, {}, {}, {}],
-    [{}, {}, {}, {}, {}]
-  ];
+  board: any;
 
   activeTheme: any = {};
   semaphores: any = {
     won: false,
     lost: false,
-    displayNewGamePopUp: false
+    displayNewGamePopUp: false,
+    displayLevelSelector: true
   };
 
   timeLeft: number = 0;
@@ -30,40 +26,11 @@ export class AppComponent implements OnInit {
   dimension: number = 5;
 
 
-  themes: any = [
-    {
-      bg: 'bg-red-300',
-      text: 'text-red-900',
-      table_bg: 'bg-red-900',
-      table_border: 'border-red-900',
-      title: 'text-red-900',
-      btn_bg: 'bg-red-900 border-black hover:bg-red-600',
-      field_bg: 'bg-pink-200',
-      board_01: 'bg-red-600',
-      board_02: 'bg-red-400',
-      line: 'bg-red-900',
-      numbers: 'text-red-900'
-
-    },
-    {
-      bg: 'bg-indigo-900',
-      text: 'text-indigo-900',
-      table_bg: 'bg-fuchsia-900',
-      table_border: 'border-fuchsia-900',
-      title: 'text-purple-400',
-      btn_bg: 'bg-purple-400 border-purple-400 hover:bg-gray-700',
-      field_bg: 'bg-purple-200',
-      board_01: 'bg-indigo-500',
-      board_02: 'bg-indigo-400',
-      line: 'bg-fuchsia-900',
-      numbers: 'text-fuchsia-900'
-    }
-  ];
-
   startTimer(minutes?: number): void {
     this.interval = setInterval(() => {
       if (this.timeLeft === 0) {
         this.semaphores.lost = true;
+        window.alert('You lost');
         this.stopTimer();
       }
       if (this.timeLeft > 0) {
@@ -77,20 +44,28 @@ export class AppComponent implements OnInit {
     clearInterval(this.interval);
   }
 
+  chooseDimension(dimension: number): void {
+    this.dimension = dimension;
+    this.semaphores.displayLevelSelector = false;
+    this.semaphores.displayNewGamePopUp = true;
+  }
+
 
   chooseTheme(i: number): void {
-    this.activeTheme = this.themes[i];
+    this.activeTheme = themes[i];
   }
 
   ngOnInit(): void {
-    this.activeTheme = this.themes[0];
-    this.chooseTime(5);
+    this.activeTheme = themes[0];
   }
 
   dataChanged(newObj: any, i: number, j: number): void {
     this.board[i][j].value = newObj;
-      if (this.checkWinner()) {
-      window.alert('won');
+    if (this.checkWinner()) {
+      setTimeout(() => {
+        window.alert('won');
+        this.semaphores.won = true;
+      }, 750);
       this.stopTimer();
     }
   }
@@ -109,12 +84,42 @@ export class AppComponent implements OnInit {
 
   initNewGame(): void {
     this.stopTimer();
-    this.semaphores.displayNewGamePopUp = true;
+    this.semaphores.displayLevelSelector = true;
   }
 
   newGame(minutes?: number): void {
 
-    const niz = states[this.getRandomArbitrary(0, states.length - 1)];
+    let niz: any = [];
+
+    if (this.dimension === 5) {
+      this.board = [
+        [{}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}],
+        [{}, {}, {}, {}, {}]
+      ];
+      niz = states[this.getRandomArbitrary(0, states.length - 1)];
+    }
+
+    if (this.dimension === 3) {
+      niz = niz3x3[this.getRandomArbitrary(0, niz3x3.length - 1)];
+      this.board = [
+        [{}, {}, {}],
+        [{}, {}, {}],
+        [{}, {}, {}]
+      ];
+
+    } else if (this.dimension === 4) {
+      this.board = [
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}],
+        [{}, {}, {}, {}]
+      ];
+      niz = niz4x4[this.getRandomArbitrary(0, niz4x4.length - 1)];
+    }
+
     for (let i = 0; i < this.dimension; i++) {
       for (let j = 0; j < this.dimension; j++) {
         const boardItem = this.findBoardItem(niz, i, j);
@@ -176,15 +181,5 @@ export class AppComponent implements OnInit {
       col++;
     }
     return totalSumInRow === this.board[i][j].value;
-  }
-
-
-}
-
-
-@Pipe({name: 'DecimalPipe'})
-export class NumNotRoundPipe implements PipeTransform {
-  transform(value: number): number {
-    return Math.floor(value * 100) / 100;
   }
 }

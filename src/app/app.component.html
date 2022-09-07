@@ -1,11 +1,34 @@
-<div class="flex flex-col justify-center items-center h-full
-  {{activeTheme.bg}}">
-  <div
-    class="flex flex-col items-center justify-center">
+<div class="flex flex-col justify-center items-center h-full {{activeTheme.bg}}">
+  <div class="flex flex-col items-center justify-center">
     <h1 class="my-6 {{activeTheme.title}} text-center font-bold text-4xl
       h-full">
       KAKURO
     </h1>
+  </div>
+
+  <!--  POP UP ZA IZBOR DIMENZIJA-->
+
+  <div *ngIf="semaphores.displayLevelSelector"
+       class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+    <div class="w-2/4 bg-purple-500 flex flex-col items-center space-y-3 justify-start py-10 rounded-md relative z-10 flex flex-col border-2 border-white">
+
+      <h1 class="text-white font-bold text-3xl">KAKURO</h1>
+      <h2 class="text-white font-bold text-3xl">Izaberite dimenzije</h2>
+
+      <div class="flex flex-col justify-center items-center space-y-5">
+
+        <button (click)="chooseDimension(3)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+          3x3
+        </button>
+        <button (click)="chooseDimension(4)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+          4x4
+        </button>
+        <button (click)="chooseDimension(5)" class="px-6 py-2 w-32 rounded-md border border-white bg-red-500 font-bold text-white hover:bg-red-300">
+          5x5
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <!--  DUGMAD ZA TEME-->
@@ -26,8 +49,7 @@
 
   <!--  TABELA-->
 
-  <div class="flex justify-center items-center mb-20 {{activeTheme.table_bg}}
-    rounded">
+  <div *ngIf="!semaphores.displayLevelSelector && !this.semaphores.displayNewGamePopUp" class="flex justify-center items-center mb-20 {{activeTheme.table_bg}} rounded">
     <div class="grid grid-rows-10 space-y-1 overflow-hidden border border-4
       {{activeTheme.table_border}}">
       <div *ngFor="let row of board; let i= index" class="flex flex-row
@@ -76,10 +98,22 @@
   <!--  POPUP ZA NOVU IGRU-->
 
   <div *ngIf="semaphores.displayNewGamePopUp" class="fixed inset-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-    <div class="p-20 flex flex-col justify-center items-start bg-purple-500 border-2 rounded-md space-y-4 z-10 text-black font-bold">
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(10)">10 minutes</button>
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(5)">5 minutes</button>
-      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100" (click)="chooseTime(3)">3 minutes</button>
+    <div class="p-20 flex flex-col justify-center items-center bg-purple-500 border-2 rounded-md space-y-4 z-10 text-black font-bold">
+
+      <h2 class="text-white font-bold text-3xl">Izaberite vrijeme</h2>
+
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+              (click)="chooseTime(10)">
+        10 minuta
+      </button>
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+              (click)="chooseTime(5)">
+        5 minuta
+      </button>
+      <button class="px-6 py-2 rounded-md border border-white bg-white hover:bg-gray-100"
+              (click)="chooseTime(3)">
+        3 minuta
+      </button>
     </div>
   </div>
 
